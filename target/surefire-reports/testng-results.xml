@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="2" passed="2" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2026-02-19T16:28:52 IST" name="Grid Suite" finished-at="2026-02-19T16:29:48 IST" duration-ms="56585">
+    <groups>
+    </groups>
+    <test started-at="2026-02-19T16:28:52 IST" name="Chrome_Test" finished-at="2026-02-19T16:29:07 IST" duration-ms="15625">
+      <class name="demo.GridLoginTest">
+        <test-method is-config="true" signature="setUp(java.lang.String,java.lang.String)[pri:0, instance:demo.GridLoginTest@515aebb0]" started-at="2026-02-19T16:28:52 IST" name="setUp" finished-at="2026-02-19T16:28:59 IST" duration-ms="7449" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[http://localhost:4444]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="openHomePageAndVerifyTitle()[pri:0, instance:demo.GridLoginTest@515aebb0]" started-at="2026-02-19T16:28:59 IST" name="openHomePageAndVerifyTitle" finished-at="2026-02-19T16:29:06 IST" duration-ms="6758" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- openHomePageAndVerifyTitle -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:demo.GridLoginTest@515aebb0]" started-at="2026-02-19T16:29:06 IST" name="tearDown" finished-at="2026-02-19T16:29:07 IST" duration-ms="1316" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- demo.GridLoginTest -->
+    </test> <!-- Chrome_Test -->
+    <test started-at="2026-02-19T16:28:52 IST" name="Firefox_Test" finished-at="2026-02-19T16:29:48 IST" duration-ms="56585">
+      <class name="demo.GridLoginTest">
+        <test-method is-config="true" signature="setUp(java.lang.String,java.lang.String)[pri:0, instance:demo.GridLoginTest@5e0e82ae]" started-at="2026-02-19T16:28:52 IST" name="setUp" finished-at="2026-02-19T16:29:39 IST" duration-ms="47650" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[firefox]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[http://localhost:4444]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="openHomePageAndVerifyTitle()[pri:0, instance:demo.GridLoginTest@5e0e82ae]" started-at="2026-02-19T16:29:39 IST" name="openHomePageAndVerifyTitle" finished-at="2026-02-19T16:29:44 IST" duration-ms="4063" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- openHomePageAndVerifyTitle -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:demo.GridLoginTest@5e0e82ae]" started-at="2026-02-19T16:29:44 IST" name="tearDown" finished-at="2026-02-19T16:29:48 IST" duration-ms="4773" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- demo.GridLoginTest -->
+    </test> <!-- Firefox_Test -->
+  </suite> <!-- Grid Suite -->
+</testng-results>
