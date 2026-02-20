@@ -1,0 +1,96 @@
+name: Grid UI Tests (Maven + TestNG)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: grid-ui-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java (Temurin 17)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      # Start Selenium Grid (hub + chrome + firefox) via docker run
+      - name: Start Selenium Grid (Hub + Nodes)
+        run: |
+          docker network create grid || true
+
+          # Start Hub
+          docker run -d --rm --name selenium-hub \
+            --network grid \
+            -p 4442-4444:4442-4444 \
+            selenium/hub:4.23.0
+
+          # Start Chrome Node
+          docker run -d --rm --name node-chrome \
+            --network grid \
+            -e SE_EVENT_BUS_HOST=selenium-hub \
+            -e SE_EVENT_BUS_PUBLISH_PORT=4442 \
+            -e SE_EVENT_BUS_SUBSCRIBE_PORT=4443 \
+            -e SE_NODE_MAX_SESSIONS=1 \
+            -e SE_NODE_OVERRIDE_MAX_SESSIONS=true \
+            -v /dev/shm:/dev/shm \
+            selenium/node-chrome:4.23.0
+
+          # Start Firefox Node
+          docker run -d --rm --name node-firefox \
+            --network grid \
+            -e SE_EVENT_BUS_HOST=selenium-hub \
+            -e SE_EVENT_BUS_PUBLISH_PORT=4442 \
+            -e SE_EVENT_BUS_SUBSCRIBE_PORT=4443 \
+            -e SE_NODE_MAX_SESSIONS=1 \
+            -e SE_NODE_OVERRIDE_MAX_SESSIONS=true \
+            -v /dev/shm:/dev/shm \
+            selenium/node-firefox:4.23.0
+
+          echo "Waiting for Selenium Grid to be ready..."
+          # Wait up to ~90s for Grid to report ready=true
+          timeout 90s bash -c 'until curl -s http://localhost:4444/status | grep -q "\"ready\": true"; do sleep 3; done'
+          curl -s http://localhost:4444/status || true
+
+      - name: Run TestNG suite (uses your pom.xml surefire config)
+        run: |
+          # If your testng.xml uses parameters, ensure it passes gridUrl=http://localhost:4444/wd/hub
+          mvn -B -Dsurefire.suiteXmlFiles=${{ env.SUITE_FILE }} test
+        env:
+          SUITE_FILE: testng.xml
+          MAVEN_OPTS: -Xmx1024m
+
+      - name: Upload surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/**
+          if-no-files-found: warn
+
+      - name: Upload screenshots (if your tests save them under ./screenshots)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots/**
+          if-no-files-found: ignore
+
+      - name: Teardown Selenium Grid
+        if: always()
+        run: |
+          docker logs selenium-hub || true
+          docker ps -a || true
+          docker stop node-chrome node-firefox selenium-hub || true
+          docker network rm grid || true
